@@ -1,0 +1,16 @@
+function DBplot_rasterscell_bystim(conn,cellid)
+%%
+[sn stimids] = DBget_stim_cell(conn,cellid);
+[trialids] = DBget_trial_cell(conn,cellid);
+
+st = [];
+figure
+for i = 1:length(stimids)/4
+    ax = subplot(length(stimids)/4,1,i);
+    currtrialids = DBget_trial(conn, ['trialid IN ' DBtool_inlist(trialids) ' AND stimulusid = ' DBtool_num2strNULL(stimids(i))]);
+    spiketrainids = DBget_spiketrainids(conn,cellid,currtrialids);
+    DBplot_raster_spiketrains(conn,spiketrainids,ax);
+    set(gca,'xticklabel','');
+end
+
+end
